@@ -1,4 +1,9 @@
 --------------------
+-- https://github.com/wangzexi/NodeMCU-HTTP-Server
+-- https://github.com/borischernov/nodemcu_http_server
+--------------------
+
+--------------------
 -- helper
 --------------------
 function urlDecode(url)
