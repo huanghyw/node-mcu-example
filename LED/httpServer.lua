@@ -88,6 +88,31 @@ function Res:send(body)
     doSend()
 end
 
+function Res:sendJson(body)
+    self._status = self._status or 200
+    self._type = self._type or 'application/json'
+
+    local buf = 'HTTP/1.1 ' .. self._status .. '\r\n'
+        .. 'Content-Type: ' .. self._type .. '\r\n'
+        .. 'Content-Length:' .. string.len(body) .. '\r\n'
+    if self._redirectUrl ~= nil then
+        buf = buf .. 'Location: ' .. self._redirectUrl .. '\r\n'
+    end
+    buf = buf .. '\r\n' .. body
+
+    local function doSend()
+        if buf == '' then 
+            self:close()
+        else
+            self._skt:send(string.sub(buf, 1, 512))
+            buf = string.sub(buf, 513)
+        end
+    end
+    self._skt:on('sent', doSend)
+
+    doSend()
+end
+
 function Res:sendFile(filename)
     if file.exists(filename .. '.gz') then
         filename = filename .. '.gz'

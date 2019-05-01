@@ -1,3 +1,17 @@
+pins = {
+    ["pin_red"] = 6,
+    ["pin_yellow"] = 1,
+    ["pin_green"] = 3
+}
+
+for pinName, pinAddr in pairs(pins) do
+    gpio.mode(pinAddr, gpio.OUTPUT)
+    gpio.write(pinAddr, gpio.LOW)
+    print (pinName .. ' set ' .. gpio.LOW)
+end
+
+
+
 wifi.setmode(wifi.SOFTAP)
 
 cfg =
@@ -6,6 +20,7 @@ cfg =
     netmask="255.255.255.0",
     gateway="192.168.1.1"
 }
+
 wifi.ap.setip(cfg)
 
 dhcp_config ={}
@@ -25,22 +40,13 @@ httpServer:listen(80)
 
 -- Custom API
 -- Get text/html
-httpServer:use('/welcome', function(req, res)
-    res:send('Hello ' .. req.query.name) -- /welcome?name=doge
+httpServer:use('/led', function(req, res)
+    print('Operation ' .. req.query.pinName .. ' to ' .. req.query.state )
+    if req.query.pinName  ~= nil and req.query.state ~= nil then
+        gpio.write(pins[req.query.pinName], req.query.state)
+    end 
+    res:send('Operation ' .. req.query.pinName .. ' to ' .. req.query.state )
 end)
 
--- Get file
-httpServer:use('/doge', function(req, res)
-    res:sendFile('doge.jpg')
-end)
 
--- Get json
-httpServer:use('/json', function(req, res)
-    res:type('application/json')
-    res:send('{"doge": "smile"}')
-end)
 
--- Redirect
-httpServer:use('/redirect', function(req, res)
-    res:redirect('doge.jpg')
-end)
