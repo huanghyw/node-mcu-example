@@ -1,9 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>index</title>
+	<title>LED远程控制</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <body>
-hello esp html!
+<pre>选择按钮控制LED</pre>
+<button onclick="opt('pin_red', 1)">打开红色LED</button>
+<button onclick="opt('pin_red', 0)">关闭红色LED</button>
+<button onclick="opt('pin_yellow', 1)">打开黄色LED</button>
+<button onclick="opt('pin_yellow', 0)">关闭黄色LED</button>
+<button onclick="opt('pin_green', 1)">打开绿色LED</button>
+<button onclick="opt('pin_green', 0)">关闭绿色LED</button>
+
+<!-- <script type="text/javascript" src="jquery-3.4.0.min.js"></script> -->
+<script type="text/javascript">
+var xmlhttp;
+if (window.XMLHttpRequest){
+	// code for IE7+, Firefox, Chrome, Opera, Safari
+	xmlhttp=new XMLHttpRequest();
+}
+else
+{
+	// code for IE6, IE5
+	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+
+function opt(pinName, state){
+	// $.get("/led?pinName=" + pinName + "&state=" + state);
+
+	xmlhttp.open("GET","/led?pinName=" + pinName + "&state=" + state + "&t=" + Math.random(),true);
+	xmlhttp.send();
+}
+
+</script>
 </body>
 </html>
