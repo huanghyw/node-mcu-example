@@ -5,18 +5,23 @@ pins = {
     ["pin_green"] = 3
 }
 
+detect_pin = 7
+
 for pinName, pinAddr in pairs(pins) do
     gpio.mode(pinAddr, gpio.OUTPUT)
     gpio.write(pinAddr, gpio.LOW)
     print (pinName .. ' set ' .. gpio.LOW)
 end
 
+gpio.write(detect_pin, gpio.LOW)
+gpio.mode(detect_pin, gpio.INPUT)
+
 -- set pin_green to pwd mode and init state
-pwm.setup(pins["pin_green"], 120, 512)
+pwm.setup(pins["pin_green"], 1000, 0)
 pwm.start(pins["pin_green"])
-pwm.setduty(pins["pin_green"], 0)
 
 -- dhcp init
+dhcp_config = {}
 dhcp_config.start = "192.168.1.100"
 wifi.ap.dhcp.config(dhcp_config)
 
@@ -52,18 +57,28 @@ pin_yellow_timer:register(500, tmr.ALARM_AUTO, function()
 end)
 
 -- regist pwm led timer
-pin_green_pwd_step = 1;
+pin_green_flag = 50;
 pin_green_timer = tmr.create()
-pin_green_timer:register(10, tmr.ALARM_AUTO, function() 
+pin_green_timer:register(50, tmr.ALARM_AUTO, function() 
     currentDuty = pwm.getduty(pins["pin_green"])
-    if currentDuty > 1022 then 
-        pin_green_pwd_step = -1 
-    elseif currentDuty < 1 then 
-        pin_green_pwd_step = 1
+    if currentDuty > 1023 - pin_green_flag then 
+        pin_green_flag = pin_green_flag * -1 
+        pwm.setduty(pins["pin_green"], 1023)
+    elseif currentDuty < 0 - pin_green_flag then
+        pin_green_flag = pin_green_flag * -1
+        pwm.setduty(pins["pin_green"], 0)
+    else
+        currentDuty = currentDuty + pin_green_flag
+        pwm.setduty(pins["pin_green"], currentDuty)
     end
-    currentDuty = currentDuty + pin_green_pwd_step
-    pwm.setduty(pins["pin_green"], currentDuty)
 end)
+
+detect_move = 0
+detect_pin_timer = tmr.create()
+detect_pin_timer:register(100, tmr.ALARM_AUTO, function() 
+    detect_move = gpio.read(detect_pin)
+end)
+detect_pin_timer:start()
 
 -- Led API
 httpServer:use('/led', function(req, res)
@@ -76,12 +91,18 @@ httpServer:use('/led', function(req, res)
         pin_yellow_timer:stop()
         gpio.write(pins["pin_yellow"], 0)
     elseif req.query.pinName == "pin_green" and req.query.state == "1" then
+        pwm.setduty(pins["pin_green"], pin_green_flag)
         pin_green_timer:start()
     elseif req.query.pinName == "pin_green" and req.query.state == "0" then
         pin_green_timer:stop()
         pwm.setduty(pins["pin_green"], 0)
     end 
     res:send('Operation ' .. req.query.pinName .. ' to ' .. req.query.state )
+end)
+
+-- Detect API
+httpServer:use('/detect', function(req, res)
+    res:send(detect_move)
 end)
 
 
