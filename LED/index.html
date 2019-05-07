@@ -6,12 +6,13 @@
 </head>
 <body>
 <pre>选择按钮控制LED</pre>
-<button onclick="opt('pin_red', 1)">打开红色LED</button>
-<button onclick="opt('pin_red', 0)">关闭红色LED</button>
-<button onclick="opt('pin_yellow', 1)">打开黄色LED</button>
-<button onclick="opt('pin_yellow', 0)">关闭黄色LED</button>
-<button onclick="opt('pin_green', 1)">打开绿色LED</button>
-<button onclick="opt('pin_green', 0)">关闭绿色LED</button>
+<button onclick="opt('pin_red', 1)">打开红色LED</button><br/>
+<button onclick="opt('pin_red', 0)">关闭红色LED</button><br/>
+<button onclick="opt('pin_yellow', 1)">打开黄色LED</button><br/>
+<button onclick="opt('pin_yellow', 0)">关闭黄色LED</button><br/>
+<button onclick="opt('pin_green', 1)">打开绿色LED</button><br/>
+<button onclick="opt('pin_green', 0)">关闭绿色LED</button><br/>
+<pre id="detect"></pre>
 
 <!-- <script type="text/javascript" src="jquery-3.4.0.min.js"></script> -->
 <script type="text/javascript">
@@ -26,12 +27,30 @@ else
 	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
 }
 
-function opt(pinName, state){
-	// $.get("/led?pinName=" + pinName + "&state=" + state);
+xmlhttp.onreadystatechange=function(){
+	if (xmlhttp.readyState==4 && xmlhttp.status==200){
+		if(xmlhttp.responseText == 1){
+			document.getElementById('detect').innerHTML = "发现移动物体!!!";
+		}else if(xmlhttp.responseText == 0){
+			document.getElementById('detect').innerHTML = "正常";
+		}
+	}
+}
 
-	xmlhttp.open("GET","/led?pinName=" + pinName + "&state=" + state + "&t=" + Math.random(),true);
+function opt(pinName, state){
+	xmlhttp.open("GET","/led?pinName=" + pinName + "&state=" + state + "&t=" + Math.random(), true);
 	xmlhttp.send();
 }
+
+document.getElementById('detect').innerHTML = "正常";
+
+setInterval(function() {
+	xmlhttp.open("GET","/detect?t=" + Math.random(), true);
+	xmlhttp.send();
+	
+}, 1000);
+
+
 
 </script>
 </body>
