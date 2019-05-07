@@ -7,5 +7,5 @@
 其中使用了基本的IO操作，也涉及了可调占空比相关知识。
 
 ## [Detect](https://github.com/huanghyw/node-mcu-example/tree/master/Detect)
-使用HC-SR501模块进行移动生物红外检测，当检测到目标时，模块out pin输出高电平，否则为低电平。
+使用HC-SR501模块进行移动生物红外检测，当检测到目标时，模块out pin输出高电平，否则为低电平。  
 将pin设置为读模式，即可通过读取电平状态判断是否检测到移动生物。
