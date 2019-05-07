@@ -5,16 +5,11 @@ pins = {
     ["pin_green"] = 3
 }
 
-detect_pin = 7
-
 for pinName, pinAddr in pairs(pins) do
     gpio.mode(pinAddr, gpio.OUTPUT)
     gpio.write(pinAddr, gpio.LOW)
     print (pinName .. ' set ' .. gpio.LOW)
 end
-
-gpio.write(detect_pin, gpio.LOW)
-gpio.mode(detect_pin, gpio.INPUT)
 
 -- set pin_green to pwd mode and init state
 pwm.setup(pins["pin_green"], 1000, 0)
@@ -73,13 +68,6 @@ pin_green_timer:register(50, tmr.ALARM_AUTO, function()
     end
 end)
 
-detect_move = 0
-detect_pin_timer = tmr.create()
-detect_pin_timer:register(100, tmr.ALARM_AUTO, function() 
-    detect_move = gpio.read(detect_pin)
-end)
-detect_pin_timer:start()
-
 -- Led API
 httpServer:use('/led', function(req, res)
     print('Operation ' .. req.query.pinName .. ' to ' .. req.query.state )
@@ -98,11 +86,6 @@ httpServer:use('/led', function(req, res)
         pwm.setduty(pins["pin_green"], 0)
     end 
     res:send('Operation ' .. req.query.pinName .. ' to ' .. req.query.state )
-end)
-
--- Detect API
-httpServer:use('/detect', function(req, res)
-    res:send(detect_move)
 end)
 
 
