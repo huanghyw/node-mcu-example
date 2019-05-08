@@ -2,12 +2,6 @@
 
 ![HC-SR501](https://github.com/huanghyw/node-mcu-example/blob/master/resource/HC-SR501_01.jpg)
 
-![HC-SR501](https://github.com/huanghyw/node-mcu-example/blob/master/resource/HC-SR501_02.jpg)
-
-![HC-SR501](https://github.com/huanghyw/node-mcu-example/blob/master/resource/HC-SR501_03.jpg)
-
-![HC-SR501](https://github.com/huanghyw/node-mcu-example/blob/master/resource/HC-SR501_04.jpg)
-
 | | HC-SR501人体感应模块 |
 |-|:-|
 |工作电压范围 | 直流电压4.5-20V |
