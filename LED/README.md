@@ -134,3 +134,7 @@ pin_green_timer:register(50, tmr.ALARM_AUTO, function()
     end
 end)
 ```
+
+**启动定时器** `pin_green_timer:start()`
+
+**关闭定时器** `pin_green_timer:start()`
