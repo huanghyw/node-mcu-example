@@ -11,7 +11,7 @@
 
 | IO | index | ESP8266 pin | IO index | ESP8266 pin |
 | -- | ----- | ----------- | -------- | ----------- |
-| 0 | GPIO16 | 7 | GPIO13 |
+| 0[*] | GPIO16 | 7 | GPIO13 |
 | 1 | GPIO5 | 8 | GPIO15 |
 | 2 | GPIO4 | 9 | GPIO3 |
 | 3 | GPIO0 | 10 | GPIO1 |
