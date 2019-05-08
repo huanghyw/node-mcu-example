@@ -89,6 +89,21 @@ Data       0     1       2      4      0      4     1      0
 pwm.setup(pins["pin_green"], 1000, 0)
 pwm.start(pins["pin_green"])
 ```
-
-**启动HTTP Server**  
-**启动HTTP Server**  
+**改变占空比**
+```
+pin_green_flag = 50;
+pin_green_timer = tmr.create()
+pin_green_timer:register(50, tmr.ALARM_AUTO, function() 
+    currentDuty = pwm.getduty(pins["pin_green"])
+    if currentDuty > 1023 - pin_green_flag then 
+        pin_green_flag = pin_green_flag * -1 
+        pwm.setduty(pins["pin_green"], 1023)
+    elseif currentDuty < 0 - pin_green_flag then
+        pin_green_flag = pin_green_flag * -1
+        pwm.setduty(pins["pin_green"], 0)
+    else
+        currentDuty = currentDuty + pin_green_flag
+        pwm.setduty(pins["pin_green"], currentDuty)
+    end
+end)
+```
