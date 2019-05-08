@@ -26,6 +26,28 @@ dofile('httpServer.lua')
 httpServer:listen(80)
 ```
 
+**提供API接口**  
+```
+httpServer:use('/led', function(req, res)
+    print('Operation ' .. req.query.pinName .. ' to ' .. req.query.state )
+    if req.query.pinName == "pin_red" and req.query.state ~= nil then
+        gpio.write(pins[req.query.pinName], req.query.state)
+    elseif req.query.pinName == "pin_yellow" and req.query.state == "1" then
+        pin_yellow_timer:start()
+    elseif req.query.pinName == "pin_yellow" and req.query.state == "0" then
+        pin_yellow_timer:stop()
+        gpio.write(pins["pin_yellow"], 0)
+    elseif req.query.pinName == "pin_green" and req.query.state == "1" then
+        pwm.setduty(pins["pin_green"], pin_green_flag)
+        pin_green_timer:start()
+    elseif req.query.pinName == "pin_green" and req.query.state == "0" then
+        pin_green_timer:stop()
+        pwm.setduty(pins["pin_green"], 0)
+    end 
+    res:send('Operation ' .. req.query.pinName .. ' to ' .. req.query.state )
+end)
+```
+
 ## 案例1，控制LED开关
 
 **针脚设置为输出模式**  
