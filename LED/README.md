@@ -79,7 +79,7 @@ end)
 
 **启动定时器** `pin_yellow_timer:start()`
 
-**关闭定时器** `pin_yellow_timer:start()`
+**关闭定时器** `pin_yellow_timer:stop()`
 
 ## 案例3，LED呼吸灯
 **PWM，脉冲宽度调制**  
@@ -137,4 +137,4 @@ end)
 
 **启动定时器** `pin_green_timer:start()`
 
-**关闭定时器** `pin_green_timer:start()`
+**关闭定时器** `pin_green_timer:stop()`
